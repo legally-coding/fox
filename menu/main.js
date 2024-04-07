@@ -72,5 +72,5 @@ function linkStreamLinks(stream){
 
 function redirect(streamid){
     console.log(streamid);
-    window.location.href = '../streaming/?stream='+streamid;
+    window.location.href = '../watch/?stream='+streamid;
 }
