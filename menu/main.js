@@ -16,7 +16,7 @@ async function loadEvents() {
     let games = await response.json();
     liveGames = games = games.events.filter((g) => {
         console.log(g?.tvStations.some((t) => { return validFoxStreams.indexOf(t) > -1 }));
-        return /*g?.eventStatus == 1 && */g?.tvStations.some((t) => { return validFoxStreams.indexOf(t) > -1 });
+        return /*g?.eventStatus == 1 && */g?.tvStations.some((t) => { return validFoxStreams.indexOf(t) > -1 }) && (new Date(g.eventTime)).getTime() - Date.now() < 600000;
     });
 
     document.querySelector(".game-list").style.display = "block";
