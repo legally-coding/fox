@@ -3,7 +3,7 @@ var liveGames = [];
 var loaded = 0;
 
 document.querySelector("#view").onclick = function () {
-    if(loaded)return;
+    if (loaded) return;
     this.style.display = 'none';
     this.style.cursor = 'default';
     loaded = 1;
@@ -12,11 +12,14 @@ document.querySelector("#view").onclick = function () {
 
 
 async function loadEvents() {
+
+    /*  old response
+
     let response = await fetch("https://api.foxsports.com/bifrost/v1/topevents/broadcast/eventschedule?apikey=jE7yBJVRNAwdDesMgTzTXUUSx1It41Fq", { cache: "reload" });
     let games = await response.json();
     liveGames = games = games.events.filter((g) => {
         console.log(g?.tvStations.some((t) => { return validFoxStreams.indexOf(t) > -1 }));
-        return /*g?.eventStatus == 1 && */g?.tvStations.some((t) => { return validFoxStreams.indexOf(t) > -1 }) && (new Date(g.eventTime)).getTime() - Date.now() < 600000;
+        return g?.tvStations.some((t) => { return validFoxStreams.indexOf(t) > -1 }) && (new Date(g.eventTime)).getTime() - Date.now() < 600000;
     });
 
     document.querySelector(".game-list").style.display = "block";
@@ -24,15 +27,29 @@ async function loadEvents() {
     
     console.log(games);
 
+    */
+
+
+    document.querySelector(".game-list").style.display = "block";
+    let response = await fetch("https://api.fox.com/fs/product/curated/v1/sporting/keystone/detail/by_filters?callsign=BTN%2CBTN-DIGITAL%2CFOX%2CFOX-DIGITAL%2CFOXDEP%2CFOXDEP-DIGITAL%2CFS1%2CFS1-DIGITAL%2CFS2%2CFS2-DIGITAL%2CFSP%2CKCPQ-DT&end_date=1756575240&size=50&start_date=1756574940&video_type=listing", {
+        "headers": {
+            "x-fox-apikey": "cf289e299efdfa39fb6316f259d1de93",
+        },
+        cache:"reload"
+    });
+    let json = await response.json();
+    let games = json.data.listings.items;
+
     games.forEach(g => initLiveGames(g));
 
-    
+
 }
 
 function initLiveGames(game) {
     var el = document.createElement("div");
     el.innerText = game.title;
-    el.onclick = ()=>{createStreamLinks(game)};
+    // el.onclick = () => { createStreamLinks(game) }; old / former
+    el.onclick = () => { redirect(game.entity_id) };
     document.querySelector(".game-list").appendChild(el);
 }
 
@@ -41,6 +58,7 @@ function createStreamLinks(game) {
 }
 
 async function getStreamIds(game) {
+    /* old stream ids
     var screenLink = game.entityLink.contentUri;
     let response = await fetch('https://api3.fox.com/v2.0/screens/foxsports-detail/' + screenLink, {
         headers: {
@@ -52,25 +70,29 @@ async function getStreamIds(game) {
     console.log(game);
 
     let streams = [];
-    game.panels.member[0].items.member.forEach((s)=>s.airingType == "live" ? streams.push([s.trackingData.properties.assetName,s.id]) : 1);
+    game.panels.member[0].items.member.forEach((s) => s.airingType == "live" ? streams.push([s.trackingData.properties.assetName, s.id]) : 1);
 
 
     console.log(streams);
 
     document.querySelector(".game-list").innerHTML = '';
-    streams.forEach(s=>linkStreamLinks(s));
-    
+    streams.forEach(s => linkStreamLinks(s));
+
+    */
+
+    document.querySelector(".game-list").innerHTML = '';
+
 }
 
-function linkStreamLinks(stream){
+function linkStreamLinks(stream) {
     var el = document.createElement("div");
     el.innerText = stream[0];
-    el.onclick = ()=>{redirect(stream[1])};
+    el.onclick = () => { redirect(stream[1]) };
 
     document.querySelector(".game-list").appendChild(el);
 }
 
-function redirect(streamid){
+function redirect(streamid) {
     console.log(streamid);
-    window.location.href = '../watch/?stream='+streamid;
+    window.location.href = '../watch/?stream=' + streamid;
 }
