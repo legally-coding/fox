@@ -4,7 +4,7 @@
 }
 body{
     background-color:#1e1e1e;
-    overflow: hidden;
+    overflow: auto;
 }
 div.link, div.game-list>div{
     color:#c58af9;
@@ -20,3 +20,4 @@ div.game-list{
     width:100%;
     display:none;
 }
+
