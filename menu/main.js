@@ -31,11 +31,17 @@ async function loadEvents() {
 
 
     document.querySelector(".game-list").style.display = "block";
-    let response = await fetch("https://api.fox.com/fs/product/curated/v1/sporting/keystone/detail/by_filters?callsign=BTN%2CBTN-DIGITAL%2CFOX%2CFOX-DIGITAL%2CFOXDEP%2CFOXDEP-DIGITAL%2CFS1%2CFS1-DIGITAL%2CFS2%2CFS2-DIGITAL%2CFSP%2CKCPQ-DT&end_date=1756575240&size=50&start_date=1756574940&video_type=listing", {
+    let end_date = new Date();
+    end_date.setSeconds(0, 0);
+    let start_date = new Date(end_date);
+    end_date.setMinutes(end_date.getMinutes() + 5);
+    end_date = Math.floor(end_date.getTime() / 1000);
+    start_date = Math.floor(start_date.getTime() / 1000);
+    let response = await fetch(`https://api.fox.com/fs/product/curated/v1/sporting/keystone/detail/by_filters?callsign=BTN%2CBTN-DIGITAL%2CFOX%2CFOX-DIGITAL%2CFOXDEP%2CFOXDEP-DIGITAL%2CFS1%2CFS1-DIGITAL%2CFS2%2CFS2-DIGITAL%2CFSP%2CKCPQ-DT&end_date=${start_date + 5}&size=50&start_date=${start_date}&video_type=listing`, {
         "headers": {
             "x-fox-apikey": "cf289e299efdfa39fb6316f259d1de93",
         },
-        cache:"reload"
+        cache: "reload"
     });
     let json = await response.json();
     let games = json.data.listings.items;
